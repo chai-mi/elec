@@ -23,7 +23,9 @@ export default async function Home() {
         </div>
 
         <div className="flex items-center space-x-6">
-          <a href="https://github.com/chai-mi/elec">GitHub</a>
+          <a href="https://github.com/chai-mi/elec" target="_blank">
+            GitHub
+          </a>
           <ModeToggle />
         </div>
       </nav>
