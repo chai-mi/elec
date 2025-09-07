@@ -1,0 +1,23 @@
+name = "elec"
+main = "workers.ts"
+compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
+minify = true
+upload_source_maps = true
+workers_dev = false
+preview_urls = false
+
+[observability]
+enabled = true
+
+[assets]
+binding = "ASSETS"
+directory = ".open-next/assets"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "elec"
+database_id = "53d81a00-e326-4bac-8940-8b9020db85d9"
+
+[triggers]
+crons = ["0 * * * *"]
