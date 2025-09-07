@@ -14,7 +14,7 @@ export const elecTable = sqliteTable(
     power: real("power").notNull(),
   },
   (table) => [
-    primaryKey({ columns: [table.roomId, table.timestamp] }),
-    index("time_room_idx").on(table.roomId, table.timestamp),
+    primaryKey({ columns: [table.timestamp, table.roomId] }),
+    index("time_room_idx").on(table.timestamp, table.roomId),
   ]
 );

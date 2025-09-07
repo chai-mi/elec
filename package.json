@@ -9,7 +9,8 @@
 		"lint": "next lint",
 		"deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
 		"preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-		"types": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts"
+		"types": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
+		"push": "drizzle-kit push"
 	},
 	"dependencies": {
 		"@opennextjs/cloudflare": "^1.8.0",
@@ -30,6 +31,7 @@
 		"@types/node": "^24.3.1",
 		"@types/react": "^19.1.12",
 		"@types/react-dom": "^19.1.9",
+		"drizzle-kit": "^0.31.4",
 		"eslint": "^9.35.0",
 		"eslint-config-next": "15.4.6",
 		"tailwindcss": "^4.1.13",
