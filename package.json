@@ -10,7 +10,9 @@
 		"deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
 		"preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
 		"types": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
-		"push": "drizzle-kit push"
+		"push": "drizzle-kit push",
+		"export": "wrangler d1 export elec --remote --output elec.sql --table elec",
+		"import": "wrangler d1 execute elec --file elec.sql --local"
 	},
 	"dependencies": {
 		"@opennextjs/cloudflare": "^1.8.0",

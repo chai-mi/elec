@@ -42,16 +42,18 @@ export function ChartAreaInteractive({ data }: { data: line[] }) {
   );
   const [roomid, setRoomid] = React.useState(allroomid[0]);
 
+  const time =
+    timeRange === "24h"
+      ? Date.now() - 24 * 60 * 60 * 1000
+      : timeRange === "7d"
+      ? Date.now() - 7 * 24 * 60 * 60 * 1000
+      : timeRange === "30d"
+      ? Date.now() - 30 * 24 * 60 * 60 * 1000
+      : 0;
+
   const filteredData = data
     .filter(
-      (item) =>
-        item.roomId === parseInt(roomid) &&
-        ((timeRange === "24h" &&
-          item.timestamp >= performance.now() - 24 * 60 * 60 * 1000) ||
-          (timeRange === "7d" &&
-            item.timestamp >= performance.now() - 7 * 24 * 60 * 60 * 1000) ||
-          (timeRange === "30d" &&
-            item.timestamp >= performance.now() - 30 * 24 * 60 * 60 * 1000))
+      (item) => item.roomId === parseInt(roomid) && item.timestamp >= time
     )
     .map((item) => ({
       timestamp: new Date(item.timestamp).toLocaleString("zh-CN", {
