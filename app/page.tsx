@@ -1,5 +1,4 @@
 import { ChartAreaInteractive } from "@/components/area-chart";
-import { ModeToggle } from "@/components/mode-toggle";
 
 import { elecTable } from "@/db/schema";
 import { db } from "@/db/db";
@@ -11,25 +10,12 @@ export default async function Home() {
   const data = await db.query.elecTable.findMany({
     where: gt(
       elecTable.timestamp,
-      performance.now() - 30 * 24 * 60 * 60 * 1000
+      performance.now() - 30 * 24 * 60 * 60 * 1000,
     ),
   });
 
   return (
     <>
-      <nav className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
-        <div className="flex items-center space-x-2">
-          <span className="text-xl font-semibold">EMoE</span>
-        </div>
-
-        <div className="flex items-center space-x-6">
-          <a href="https://github.com/chai-mi/elec" target="_blank">
-            GitHub
-          </a>
-          <ModeToggle />
-        </div>
-      </nav>
-
       <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">

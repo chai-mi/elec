@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState, useEffect } from "react";
 import { Moon, Sun, SunMoon } from "lucide-react";
 import { useTheme } from "next-themes";
 import {
@@ -12,7 +12,14 @@ import {
 } from "@/components/ui/select";
 
 export function ModeToggle() {
+  const [mounted, setMounted] = useState(false)
   const { theme, setTheme } = useTheme();
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+  if (!mounted) {
+    return null
+  }
   return (
     <Select onValueChange={setTheme} value={theme}>
       <SelectTrigger className="w-[140px]">
