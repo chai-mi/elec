@@ -1,11 +1,10 @@
 name = "elec"
 main = "workers.ts"
-compatibility_date = "2025-09-01"
+compatibility_date = "2025-09-15"
 compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
 minify = true
 upload_source_maps = true
 workers_dev = false
-preview_urls = false
 
 [observability]
 enabled = true
