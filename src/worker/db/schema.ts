@@ -1,9 +1,9 @@
 import {
-  int,
-  sqliteTable,
   index,
+  int,
   primaryKey,
   real,
+  sqliteTable,
 } from "drizzle-orm/sqlite-core";
 
 export const elecTable = sqliteTable(
@@ -16,5 +16,5 @@ export const elecTable = sqliteTable(
   (table) => [
     primaryKey({ columns: [table.timestamp, table.roomId] }),
     index("time_room_idx").on(table.timestamp, table.roomId),
-  ]
+  ],
 );

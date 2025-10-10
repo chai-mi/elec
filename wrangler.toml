@@ -1,8 +1,6 @@
 name = "elec"
-main = "workers.ts"
+main = "./src/worker/index.ts"
 compatibility_date = "2025-09-15"
-compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
-minify = true
 upload_source_maps = true
 workers_dev = false
 
@@ -10,8 +8,7 @@ workers_dev = false
 enabled = true
 
 [assets]
-binding = "ASSETS"
-directory = ".open-next/assets"
+directory = "dist"
 
 [[d1_databases]]
 binding = "DB"

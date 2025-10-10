@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EMoE</title>
+    <script type="module" src="/src/client/index.ts"></script>
+  </head>
+
+  <body>
+    <div class="navbar bg-base-100 shadow-sm">
+      <div class="flex-1">
+        <h1 class="text-xl font-bold mx-4">EMoE</h1>
+      </div>
+      <div class="flex-none">
+        <a
+          class="btn btn-link"
+          href="https://github.com/chai-mi/elec"
+          target="_blank"
+        >GitHub</a>
+      </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-6 py-12">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold mb-4">
+          ECUST 电量监控
+        </h1>
+      </div>
+
+      <div class="card bg-base-200">
+        <div class="card-body">
+          <div class="flex justify-between">
+            <h2 class="card-title">电量</h2>
+            <div>
+              <select id="pastdays" class="select select-neutral w-25">
+                <option value="1">一天前</option>
+                <option value="7">一周前</option>
+                <option value="30">一个月前</option>
+              </select>
+              <select id="room_id" class="select select-neutral w-20"></select>
+            </div>
+          </div>
+
+          <div class="h-100"><canvas id="chart"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
