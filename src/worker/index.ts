@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { cache } from "hono/cache";
 import { zValidator } from "@hono/zod-validator";
 import { drizzle } from "drizzle-orm/d1";
 import { and, eq, gt } from "drizzle-orm";
@@ -6,14 +7,18 @@ import { z } from "zod";
 import { env } from "cloudflare:workers";
 
 import { elecTable } from "./db/schema";
-import { getElec } from "./cron";
 import { db } from "./db/db";
+import { getElec } from "./cron";
 
 const app = new Hono<{ Bindings: Env }>()
     .basePath("/api")
     .get("/rooms", async (c) => {
         return c.json(JSON.parse(env.roomids) as number[], 200);
     })
+    .use(cache({
+        cacheName: "v1",
+        cacheControl: "public,max-age=3600",
+    }))
     .get(
         "/elec/:room_id",
         zValidator(
