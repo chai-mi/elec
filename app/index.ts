@@ -1,6 +1,6 @@
 //@ts-ignore
 import "./style.css";
-import type { AppType } from "../worker";
+import type { AppType } from "../workers";
 import { hc } from "hono/client";
 import { myChart } from "./chart";
 

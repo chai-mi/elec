@@ -1,5 +1,5 @@
 name = "elec"
-main = "./src/worker/index.ts"
+main = "workers/index.ts"
 compatibility_date = "2025-09-15"
 upload_source_maps = true
 workers_dev = false

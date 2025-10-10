@@ -8,7 +8,7 @@
 		"build": "vite build",
 		"preview": "vite build && vite preview",
 		"deploy": "vite build && wrangler deploy",
-		"types": "wrangler types",
+		"types": "wrangler types ./src/worker/cloudflare-env.d.ts",
 		"push": "drizzle-kit push",
 		"export": "wrangler d1 export elec --remote --output elec.sql --table elec",
 		"import": "wrangler d1 execute elec --file elec.sql --local"
