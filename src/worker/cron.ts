@@ -1,4 +1,8 @@
-export async function getElec(roomid: number) {
+import { env } from "cloudflare:workers";
+import { db } from "./db/db";
+import { elecTable } from "./db/schema";
+
+async function getElec(roomid: number) {
   const resp = await fetch(
     `https://yktyd.ecust.edu.cn/epay/wxpage/wanxiao/eleresult?sysid=1&roomid=${roomid}&areaid=3&buildid=20`,
     {
@@ -14,4 +18,22 @@ export async function getElec(roomid: number) {
     throw rawHtml;
   }
   return parseFloat(match[1]);
+}
+
+export async function scheduled() {
+  const roomids = JSON.parse(env.roomids) as number[];
+  const timestamp = performance.now();
+
+  await Promise.all(
+    roomids.map(async (id) => ({
+      roomId: id,
+      power: await getElec(id),
+    })),
+  ).then(async (powers) => {
+    await db.insert(elecTable).values(powers.map((item) => ({
+      timestamp,
+      roomId: item.roomId,
+      power: item.power,
+    })));
+  });
 }
