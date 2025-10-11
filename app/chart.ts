@@ -1,24 +1,9 @@
 import Chart from "chart.js/auto";
 
 const ctx = document.getElementById("chart")! as HTMLCanvasElement;
-const myChart = new Chart(ctx, {
+const myChart = new Chart<"line", number[], unknown>(ctx, {
   type: "line",
-  data: {
-    datasets: [{
-      label: "Power",
-      data: [] as number[],
-      borderColor: "#4a90e2",
-      backgroundColor: "rgba(74, 144, 226, 0.3)",
-      borderWidth: 1,
-      fill: true,
-      tension: 0,
-      pointRadius: 0,
-      pointHoverRadius: 6,
-      pointHoverBackgroundColor: "#4a90e2",
-      pointHoverBorderColor: "#ffffff",
-      pointHoverBorderWidth: 2,
-    }],
-  },
+  data: { datasets: [] },
   options: {
     responsive: true,
     maintainAspectRatio: false,
@@ -28,9 +13,6 @@ const myChart = new Chart(ctx, {
       mode: "index",
     },
     plugins: {
-      legend: {
-        display: false,
-      },
       tooltip: {
         enabled: true,
         backgroundColor: "rgba(0, 0, 0, 0.8)",
