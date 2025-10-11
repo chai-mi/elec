@@ -15,12 +15,12 @@ await client.api.rooms.$get().then(async (resp) => {
   const storage_room_id = localStorage.getItem(roomIdKey)?.split(" ") ?? [];
   for (const room_id of await resp.json()) {
     const i = document.createElement("input");
-    i.classList.add("btn", "btn-soft", "mx-1", "my-2");
+    i.classList.add("btn", "btn-soft", "btn-xs", "md:btn-sm", "mx-0.5", "my-2");
     i.type = "checkbox";
     i.name = "frameworks";
     i.ariaLabel = room_id.toString();
     i.checked = storage_room_id.includes(room_id.toString());
-    roomIdSelect.prepend(i);
+    roomIdSelect.appendChild(i);
   }
 });
 
