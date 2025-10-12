@@ -8,7 +8,7 @@
         "@negrel/webpush": "npm:@jsr/negrel__webpush@^0.5.0",
         "@std/encoding": "npm:@jsr/std__encoding@^1.0.10",
         "chart.js": "^4.5.0",
-        "daisyui": "^5.2.2",
+        "daisyui": "^5.2.3",
         "drizzle-orm": "^0.44.6",
         "es-toolkit": "^1.40.0",
         "hono": "^4.9.11",
