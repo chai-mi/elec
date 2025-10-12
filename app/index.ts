@@ -1,13 +1,15 @@
+import { hc } from "hono/client";
 //@ts-ignore
 import "./style.css";
-import type { AppType } from "../workers";
-import { hc } from "hono/client";
+import "./webpush";
 import { myChart } from "./chart";
+import type { front } from "../workers";
+import { pastdaysSelect, roomIdSelect } from "./element";
 
-const client = hc<AppType>("/");
+const client = hc<front>("/");
 
 const roomIdKey = "elec-room-id";
-const roomIdSelect = document.getElementById("room_id")! as HTMLFormElement;
+
 await client.api.rooms.$get().then(async (resp) => {
   if (!resp.ok) {
     throw await resp.text();
@@ -24,13 +26,9 @@ await client.api.rooms.$get().then(async (resp) => {
   }
 });
 
-const pastdaysSelect = document.getElementById(
-  "pastdays",
-)! as HTMLSelectElement;
-
 const reload = async () => {
   const room_ids = Array
-    .from(roomIdSelect.querySelectorAll('input[name="frameworks"]:checked'))
+    .from(roomIdSelect.querySelectorAll("input:checked"))
     .map((checkbox) => checkbox.ariaLabel!);
   localStorage.setItem(roomIdKey, room_ids.join(" "));
 

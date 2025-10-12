@@ -46,6 +46,62 @@
           <div class="h-100"><canvas id="chart"></canvas></div>
         </div>
       </div>
+
+      <dialog id="modal_1" class="modal modal-bottom sm:modal-middle">
+        <div class="modal-box">
+          <h3 class="text-lg font-bold">订阅当前选择的房间</h3>
+          <p class="py-4">
+            通过订阅，当房间的电量接近 0 时，你会收到通知
+            <br />
+            无需打开网页！
+          </p>
+          <form method="dialog">
+            <button class="btn" id="subscription">
+              订阅
+            </button>
+          </form>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
+
+      <div id="subscription-alert" class="toast toast-start" hidden>
+        <div class="alert alert-info">
+          <span>如果你没有收到订阅消息，请检查通知权限</span>
+        </div>
+      </div>
+
+      <div class="fab">
+        <div
+          tabindex="0"
+          role="button"
+          class="btn btn-lg btn-circle btn-primary"
+        >
+          <svg
+            aria-label="New"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            class="size-6"
+          >
+            <path
+              d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z"
+            />
+          </svg>
+        </div>
+
+        <div class="fab-close">
+          Close <span class="btn btn-circle btn-lg btn-error">✕</span>
+        </div>
+
+        <div>
+          订阅
+          <button class="btn btn-lg btn-circle" onclick="modal_1.showModal()">
+            S
+          </button>
+        </div>
+      </div>
     </div>
   </body>
 </html>

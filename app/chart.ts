@@ -1,7 +1,7 @@
 import Chart from "chart.js/auto";
+import { chart } from "./element";
 
-const ctx = document.getElementById("chart")! as HTMLCanvasElement;
-const myChart = new Chart<"line", number[], unknown>(ctx, {
+const myChart = new Chart<"line", number[], unknown>(chart, {
   type: "line",
   data: { datasets: [] },
   options: {

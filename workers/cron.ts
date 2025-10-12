@@ -1,6 +1,8 @@
-import { env } from "cloudflare:workers";
+import { keyBy } from "es-toolkit";
+import { env, waitUntil } from "cloudflare:workers";
 import { db } from "./db/db";
 import { elecTable } from "./db/schema";
+import { appServer } from "./webpush";
 
 async function getElec(roomid: number) {
   const resp = await fetch(
@@ -24,16 +26,49 @@ export async function scheduled() {
   const roomids = JSON.parse(env.roomids) as number[];
   const timestamp = performance.now();
 
-  await Promise.all(
+  const powers = await Promise.all(
     roomids.map(async (id) => ({
       roomId: id,
       power: await getElec(id),
     })),
-  ).then(async (powers) => {
-    await db.insert(elecTable).values(powers.map((item) => ({
+  );
+  waitUntil(
+    db.insert(elecTable).values(powers.map((item) => ({
       timestamp,
       roomId: item.roomId,
       power: item.power,
-    })));
+    }))),
+  );
+
+  const notice = powers.filter((item) => item.power < 3);
+  const noticeMap = keyBy(notice, (i) => i.roomId);
+  const subscribes = await db.query.subscribeTable.findMany({
+    where: (subscribe, { inArray }) =>
+      inArray(subscribe.roomId, notice.map((i) => i.roomId)),
+    with: {
+      webpush: true,
+    },
+    columns: {
+      user: false,
+    },
   });
+
+  for (const s of subscribes) {
+    waitUntil(
+      appServer
+        .subscribe({
+          endpoint: s.webpush.endpoint,
+          keys: {
+            auth: s.webpush.keysAuth,
+            p256dh: s.webpush.keysP256dh,
+          },
+        })
+        .pushTextMessage(
+          JSON.stringify({
+            title: `${s.roomId} 剩余电量: ${noticeMap[s.roomId].power}`,
+          }),
+          {},
+        ),
+    );
+  }
 }
