@@ -44,6 +44,26 @@ const subscription = app
       const { subscription, userinfo } = c.req.valid("json");
       console.log(subscription);
 
+      if (userinfo.room_ids.length === 0) {
+        await db.batch([
+          db
+            .delete(subscribeTable)
+            .where(eq(subscribeTable.user, userinfo.username)),
+          db
+            .delete(webpushTable)
+            .where(eq(webpushTable.user, userinfo.username)),
+        ]);
+        waitUntil(
+          appServer
+            .subscribe(subscription)
+            .pushTextMessage(
+              JSON.stringify({ title: "已删除订阅" }),
+              {},
+            ),
+        );
+        return c.newResponse(null, 204);
+      }
+
       await db.batch([
         db.insert(webpushTable).values({
           user: userinfo.username,
@@ -78,7 +98,7 @@ const subscription = app
             {},
           ),
       );
-      return c.json({ success: true });
+      return c.json({ success: true }, 201);
     },
   );
 
