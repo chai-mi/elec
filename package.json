@@ -8,10 +8,8 @@
 		"build": "vite build",
 		"preview": "vite build && vite preview",
 		"deploy": "vite build && wrangler d1 migrations apply elec --remote && wrangler deploy",
-		"types": "wrangler types ./workers/cloudflare-env.d.ts",
 		"generate": "drizzle-kit generate",
-		"export": "wrangler d1 export elec --remote --output elec.sql --table elec",
-		"import": "wrangler d1 execute elec --file elec.sql --local"
+		"types": "wrangler types ./workers/cloudflare-env.d.ts"
 	},
 	"dependencies": {
 		"@hono/zod-validator": "^0.7.4",

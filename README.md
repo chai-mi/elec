@@ -8,7 +8,7 @@
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/chai-mi/elec)
 
-部署时输入环境秘密 roomids，参考 `.dev.vars.example`
+部署时输入环境秘密 roomids，参考 `.env.example`
 
 #### 不是徐汇 18 楼
 
