@@ -69,10 +69,6 @@ const reload = async () => {
   myChart.update();
 };
 
-roomIdSelect.onreset = () => {
-  myChart.data.datasets = [];
-  myChart.update();
-};
 roomIdSelect.onchange = reload;
 pastdaysSelect.onchange = reload;
 await reload();

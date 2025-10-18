@@ -4,7 +4,7 @@ const pastdaysSelect = document.getElementById(
     "pastdays",
 )! as HTMLSelectElement;
 
-const subscript = document.getElementById("subscription")!;
+const subscript = document.getElementById("subscription")! as HTMLButtonElement;
 
 const chart = document.getElementById("chart")! as HTMLCanvasElement;
 

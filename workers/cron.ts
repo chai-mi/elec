@@ -22,7 +22,7 @@ async function getElec(roomid: number) {
   return parseFloat(match[1]);
 }
 
-export async function scheduled() {
+const scheduled: ExportedHandlerScheduledHandler<Env> = async () => {
   const roomids = JSON.parse(env.roomids) as number[];
   const timestamp = performance.now();
 
@@ -71,4 +71,6 @@ export async function scheduled() {
         ),
     );
   }
-}
+};
+
+export { scheduled };
