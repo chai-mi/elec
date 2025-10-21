@@ -19,7 +19,7 @@ async function getElec(roomid: number) {
   if (!match) {
     throw rawHtml;
   }
-  return parseFloat(match[1]);
+  return parseFloat(match.at(1)!);
 }
 
 const scheduled: ExportedHandlerScheduledHandler<Env> = async () => {
@@ -65,7 +65,7 @@ const scheduled: ExportedHandlerScheduledHandler<Env> = async () => {
         })
         .pushTextMessage(
           JSON.stringify({
-            title: `${s.roomId} 剩余电量: ${noticeMap[s.roomId].power}`,
+            title: `${s.roomId} 剩余电量: ${noticeMap[s.roomId]!.power}`,
           }),
           {},
         ),

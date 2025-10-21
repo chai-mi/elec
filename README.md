@@ -12,4 +12,4 @@
 
 #### 不是徐汇 18 楼
 
-参考 [这个第一步](https://github.com/lxl66566/ecust-electricity-statistics)，获取链接，自行修改 `lib/cron.ts` 后，部署时输入环境秘密 roomids，参考 `.dev.vars.example`
+参考 [这个第一步](https://github.com/lxl66566/ecust-electricity-statistics)，获取链接，自行修改 `workers/cron.ts` 后，部署时输入环境秘密 roomids，参考 `.env.example`
