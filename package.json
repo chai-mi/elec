@@ -1,6 +1,6 @@
 {
   "name": "elec",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,21 +12,21 @@
     "types": "wrangler types ./workers/cloudflare-env.d.ts"
   },
   "dependencies": {
-    "@cloudflare/vite-plugin": "^1.14.0",
-    "@hono/zod-validator": "^0.7.4",
+    "@cloudflare/vite-plugin": "^1.17.0",
+    "@hono/zod-validator": "^0.7.5",
     "@negrel/webpush": "npm:@jsr/negrel__webpush@^0.5.0",
     "@std/encoding": "npm:@jsr/std__encoding@^1.0.10",
     "@tailwindcss/vite": "^4.1.17",
-    "@types/node": "^24.10.0",
+    "@types/node": "^24.10.1",
     "chart.js": "^4.5.1",
-    "daisyui": "^5.4.7",
-    "drizzle-kit": "^0.31.6",
-    "drizzle-orm": "^0.44.7",
-    "es-toolkit": "^1.41.0",
-    "hono": "^4.10.4",
+    "daisyui": "^5.5.8",
+    "drizzle-kit": "^0.31.8",
+    "drizzle-orm": "^0.45.0",
+    "es-toolkit": "^1.42.0",
+    "hono": "^4.10.7",
     "tailwindcss": "^4.1.17",
-    "vite": "npm:rolldown-vite@^7.2.2",
-    "wrangler": "^4.46.0",
-    "zod": "^4.1.12"
+    "vite": "npm:rolldown-vite@^7.2.10",
+    "wrangler": "^4.53.0",
+    "zod": "^4.1.13"
   }
 }
