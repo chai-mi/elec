@@ -65,7 +65,7 @@ const scheduled: ExportedHandlerScheduledHandler<Env> = async () => {
         })
         .pushTextMessage(
           JSON.stringify({
-            title: `${s.roomId} 剩余电量: ${noticeMap[s.roomId]!.power}`,
+            title: `${s.roomId} 剩余电量：${noticeMap[s.roomId]!.power}`,
           }),
           {},
         ),

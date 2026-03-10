@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { cache } from "hono/cache";
 import { zValidator } from "@hono/zod-validator";
+import { exportApplicationServerKey } from "@negrel/webpush";
 import { and, eq, gt } from "drizzle-orm";
 import { z } from "zod";
 import { env, waitUntil } from "cloudflare:workers";
@@ -9,7 +10,6 @@ import { elecTable, subscribeTable, webpushTable } from "./db/schema";
 import { db } from "./db/db";
 import { scheduled } from "./cron";
 import { appServer, vapidKeys } from "./webpush";
-import { exportApplicationServerKey } from "@negrel/webpush";
 
 const app = new Hono<{ Bindings: Env }>().basePath("/api");
 
