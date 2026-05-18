@@ -6,13 +6,6 @@
 .pnp.js
 .yarn/install-state.gz
 
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
 # production
 /build
 
@@ -25,19 +18,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
-.env*.local
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-# OpenNext
-/.open-next
-
 # wrangler files
 .wrangler
 .dev.vars*
@@ -45,5 +25,4 @@ next-env.d.ts
 .env*
 !.env.example
 
-.vscode
 dist
