@@ -1,7 +1,7 @@
-import { hc } from "hono/client";
 import { encodeBase64Url } from "@std/encoding";
-import type { subscription } from "../workers";
-import { roomIdSelect, subscript } from "./element";
+import { hc } from "hono/client";
+import type { subscription } from "../workers/index.ts";
+import { roomIdSelect, subscript } from "./element.ts";
 
 const registration = await navigator.serviceWorker.register("sw.js");
 

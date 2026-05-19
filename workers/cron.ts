@@ -1,8 +1,8 @@
-import { keyBy } from "es-toolkit";
 import { env, waitUntil } from "cloudflare:workers";
-import { db } from "./db/db";
-import { elecTable } from "./db/schema";
-import { appServer } from "./webpush";
+import { keyBy } from "es-toolkit";
+import { db } from "./db/db.ts";
+import { elecTable } from "./db/schema.ts";
+import { appServer } from "./webpush.ts";
 
 async function getElec(roomid: number) {
   const resp = await fetch(

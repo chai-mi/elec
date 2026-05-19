@@ -1,7 +1,7 @@
 const roomIdSelect = document.getElementById("room_id")! as HTMLFormElement;
 
 const pastdaysSelect = document.getElementById(
-    "pastdays",
+  "pastdays",
 )! as HTMLSelectElement;
 
 const subscript = document.getElementById("subscription")! as HTMLButtonElement;

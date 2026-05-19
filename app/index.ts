@@ -1,10 +1,9 @@
 import { hc } from "hono/client";
-//@ts-ignore
+import type { front } from "../workers/index.ts";
+import { myChart } from "./chart.ts";
+import { pastdaysSelect, roomIdSelect } from "./element.ts";
 import "./style.css";
-import "./webpush";
-import { myChart } from "./chart";
-import type { front } from "../workers";
-import { pastdaysSelect, roomIdSelect } from "./element";
+import "./webpush.ts";
 
 const client = hc<front>("/");
 

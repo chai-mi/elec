@@ -1,5 +1,5 @@
 import Chart from "chart.js/auto";
-import { chart } from "./element";
+import { chart } from "./element.ts";
 
 const myChart = new Chart<"line", number[], unknown>(chart, {
   type: "line",
