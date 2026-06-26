@@ -43,8 +43,10 @@ const scheduled: ExportedHandlerScheduledHandler<Env> = async () => {
   const notice = powers.filter((item) => item.power < 3);
   const noticeMap = keyBy(notice, (i) => i.roomId);
   const subscribes = await db.query.subscribeTable.findMany({
-    where: (subscribe, { inArray }) =>
-      inArray(subscribe.roomId, notice.map((i) => i.roomId)),
+    where: {
+      RAW: (table, { inArray }) =>
+        inArray(table.roomId, notice.map((i) => i.roomId)),
+    },
     with: {
       webpush: true,
     },
@@ -57,10 +59,10 @@ const scheduled: ExportedHandlerScheduledHandler<Env> = async () => {
     waitUntil(
       appServer
         .subscribe({
-          endpoint: s.webpush.endpoint,
+          endpoint: s.webpush!.endpoint,
           keys: {
-            auth: s.webpush.keysAuth,
-            p256dh: s.webpush.keysP256dh,
+            auth: s.webpush!.keysAuth,
+            p256dh: s.webpush!.keysP256dh,
           },
         })
         .pushTextMessage(

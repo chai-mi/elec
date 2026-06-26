@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["./cloudflare-env.d.ts"],
+    "types": ["../worker-configuration.d.ts"],
   },
   "include": ["./**/*"],
 }

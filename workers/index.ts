@@ -1,13 +1,13 @@
 import { zValidator } from "@hono/zod-validator";
 import { exportApplicationServerKey } from "@negrel/webpush";
 import { env, waitUntil } from "cloudflare:workers";
-import { and, eq, gt } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { cache } from "hono/cache";
 import { z } from "zod";
 import { scheduled } from "./cron.ts";
 import { db } from "./db/db.ts";
-import { elecTable, subscribeTable, webpushTable } from "./db/schema.ts";
+import { subscribeTable, webpushTable } from "./db/schema.ts";
 import { appServer, vapidKeys } from "./webpush.ts";
 
 const app = new Hono<{ Bindings: Env }>().basePath("/api");
@@ -126,13 +126,14 @@ const front = app
       const room_id = parseInt(c.req.param("room_id"));
       const { pastdays } = c.req.valid("query");
       const data = await db.query.elecTable.findMany({
-        where: and(
-          eq(elecTable.roomId, room_id),
-          gt(
-            elecTable.timestamp,
-            performance.now() - pastdays * 24 * 60 * 60 * 1000,
-          ),
-        ),
+        where: {
+          roomId: room_id,
+          RAW: (table, { gt }) =>
+            gt(
+              table.timestamp,
+              performance.now() - pastdays * 24 * 60 * 60 * 1000,
+            ),
+        },
         columns: {
           roomId: false,
         },

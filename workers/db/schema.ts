@@ -1,4 +1,3 @@
-import { relations } from "drizzle-orm";
 import {
   index,
   int,
@@ -42,14 +41,4 @@ export const subscribeTable = sqliteTable(
     index("room_idx").on(table.roomId),
     index("user_idx").on(table.user),
   ],
-);
-
-export const subscribeRelations = relations(
-  subscribeTable,
-  ({ one }) => ({
-    webpush: one(webpushTable, {
-      fields: [subscribeTable.user],
-      references: [webpushTable.user],
-    }),
-  }),
 );

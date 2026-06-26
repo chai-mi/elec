@@ -8,24 +8,24 @@
     "build": "vite build",
     "preview": "vite build && wrangler d1 migrations apply elec --local && wrangler dev",
     "deploy": "vite build && wrangler d1 migrations apply elec --remote && wrangler deploy",
-    "generate": "drizzle-kit generate",
-    "types": "wrangler types ./workers/cloudflare-env.d.ts"
+    "gen-db": "drizzle-kit generate",
+    "gen-types": "wrangler types"
   },
   "dependencies": {
-    "@cloudflare/vite-plugin": "^1.38.0",
+    "@cloudflare/vite-plugin": "^1.42.3",
     "@hono/zod-validator": "^0.8.0",
     "@negrel/webpush": "npm:@jsr/negrel__webpush@^0.5.0",
     "@std/encoding": "npm:@jsr/std__encoding@^1.0.10",
-    "@tailwindcss/vite": "^4.3.0",
+    "@tailwindcss/vite": "^4.3.1",
     "chart.js": "^4.5.1",
-    "daisyui": "^5.5.20",
-    "drizzle-kit": "^0.31.10",
-    "drizzle-orm": "^0.45.2",
-    "es-toolkit": "^1.46.1",
-    "hono": "^4.12.22",
-    "tailwindcss": "^4.3.0",
-    "vite": "^8.0.14",
-    "wrangler": "^4.94.0",
+    "daisyui": "^5.6.3",
+    "drizzle-kit": "^1.0.0-rc.4",
+    "drizzle-orm": "^1.0.0-rc.4",
+    "es-toolkit": "^1.49.0",
+    "hono": "^4.12.27",
+    "tailwindcss": "^4.3.1",
+    "vite": "^8.1.0",
+    "wrangler": "^4.105.0",
     "zod": "^4.4.3"
   }
 }

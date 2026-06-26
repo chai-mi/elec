@@ -1,0 +1,203 @@
+{
+  "dialect": "sqlite",
+  "id": "6848de1b-8dcd-49a5-9cc3-6b20f6614703",
+  "prevIds": [
+    "00000000-0000-0000-0000-000000000000"
+  ],
+  "version": "7",
+  "ddl": [
+    {
+      "name": "elec",
+      "entityType": "tables"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "timestamp",
+      "table": "elec",
+      "entityType": "columns"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "room_id",
+      "table": "elec",
+      "entityType": "columns"
+    },
+    {
+      "type": "real",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "power",
+      "table": "elec",
+      "entityType": "columns"
+    },
+    {
+      "columns": [
+        "timestamp",
+        "room_id"
+      ],
+      "nameExplicit": false,
+      "name": "elec_timestamp_room_id_pk",
+      "table": "elec",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        {
+          "value": "timestamp",
+          "isExpression": false
+        },
+        {
+          "value": "room_id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "time_room_idx",
+      "table": "elec",
+      "entityType": "indexes"
+    },
+    {
+      "name": "subscribe",
+      "entityType": "tables"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "room_id",
+      "table": "subscribe",
+      "entityType": "columns"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "user",
+      "table": "subscribe",
+      "entityType": "columns"
+    },
+    {
+      "columns": [
+        {
+          "value": "room_id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "room_idx",
+      "table": "subscribe",
+      "entityType": "indexes"
+    },
+    {
+      "columns": [
+        {
+          "value": "user",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "user_idx",
+      "table": "subscribe",
+      "entityType": "indexes"
+    },
+    {
+      "columns": [
+        "user"
+      ],
+      "tableTo": "webpush",
+      "columnsTo": [
+        "user"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "nameExplicit": false,
+      "name": "subscribe_user_webpush_user_fk",
+      "table": "subscribe",
+      "entityType": "fks"
+    },
+    {
+      "name": "webpush",
+      "entityType": "tables"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "user",
+      "table": "webpush",
+      "entityType": "columns"
+    },
+    {
+      "columns": [
+        "user"
+      ],
+      "nameExplicit": false,
+      "name": "webpush_pk",
+      "table": "webpush",
+      "entityType": "pks"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "endpoint",
+      "table": "webpush",
+      "entityType": "columns"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "expiration_time",
+      "table": "webpush",
+      "entityType": "columns"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "keys_auth",
+      "table": "webpush",
+      "entityType": "columns"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "keys_p256dh",
+      "table": "webpush",
+      "entityType": "columns"
+    }
+  ],
+  "renames": []
+}

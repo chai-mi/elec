@@ -2,7 +2,7 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "elec",
   "main": "workers/index.ts",
-  "compatibility_date": "2026-05-14",
+  "compatibility_date": "2026-06-16",
   "upload_source_maps": true,
   "workers_dev": false,
   "observability": {
@@ -13,12 +13,16 @@
   },
   "assets": {
     "directory": "dist",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"],
   },
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "elec",
       "database_id": "53d81a00-e326-4bac-8940-8b9020db85d9",
+      "migrations_dir": "migrations",
+      "migrations_pattern": "migrations/*/migration.sql",
     },
   ],
   "triggers": {
