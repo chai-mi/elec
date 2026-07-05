@@ -3,8 +3,10 @@
   "name": "elec",
   "main": "workers/index.ts",
   "compatibility_date": "2026-06-16",
-  "upload_source_maps": true,
   "workers_dev": false,
+  "cache": {
+    "enabled": true,
+  },
   "observability": {
     "enabled": true,
     "traces": {
@@ -25,7 +27,12 @@
       "migrations_pattern": "migrations/*/migration.sql",
     },
   ],
-  "triggers": {
-    "crons": ["0 */3 * * *"],
-  },
+  "workflows": [
+    {
+      "name": "elec",
+      "binding": "Elec",
+      "class_name": "Elec",
+      "schedules": ["0 */3 * * *"],
+    },
+  ],
 }

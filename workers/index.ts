@@ -5,12 +5,11 @@ import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { cache } from "hono/cache";
 import { z } from "zod";
-import { scheduled } from "./cron.ts";
 import { db } from "./db/db.ts";
 import { subscribeTable, webpushTable } from "./db/schema.ts";
 import { appServer, vapidKeys } from "./webpush.ts";
 
-const app = new Hono<{ Bindings: Env }>().basePath("/api");
+const app = new Hono().basePath("/api");
 
 const subscription = app
   .get(
@@ -144,7 +143,5 @@ const front = app
 
 export type front = typeof front;
 
-export default {
-  fetch: app.fetch,
-  scheduled: scheduled,
-} satisfies ExportedHandler<Env>;
+export default app;
+export { Elec } from "./cron.ts";

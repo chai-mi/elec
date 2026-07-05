@@ -1,78 +1,84 @@
-import { env, waitUntil } from "cloudflare:workers";
+import type { WorkflowEvent } from "cloudflare:workers";
+import { env, WorkflowEntrypoint, WorkflowStep } from "cloudflare:workers";
 import { keyBy } from "es-toolkit";
 import { db } from "./db/db.ts";
 import { elecTable } from "./db/schema.ts";
 import { appServer } from "./webpush.ts";
 
-async function getElec(roomid: number) {
-  const resp = await fetch(
-    `https://yktyd.ecust.edu.cn/epay/wxpage/wanxiao/eleresult?sysid=1&roomid=${roomid}&areaid=3&buildid=20`,
-    {
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Linux; U; Android 4.1.2; zh-cn; Chitanda/Akari) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30 MicroMessenger/6.0.0.58_r884092.501 NetType/WIFI",
-      },
-    },
-  );
-  const rawHtml = await resp.text();
-  const match = /(-?\d+(\.\d+)?)度/.exec(rawHtml);
-  if (!match) {
-    throw rawHtml;
-  }
-  return parseFloat(match.at(1)!);
-}
+type Params = never;
 
-const scheduled: ExportedHandlerScheduledHandler<Env> = async () => {
-  const roomids = JSON.parse(env.roomids) as number[];
-  const timestamp = performance.now();
+export class Elec extends WorkflowEntrypoint<Env, Params> {
+  override async run(_event: WorkflowEvent<Params>, step: WorkflowStep) {
+    const timestamp = performance.now();
 
-  const powers = await Promise.all(
-    roomids.map(async (id) => ({
-      roomId: id,
-      power: await getElec(id),
-    })),
-  );
-  waitUntil(
-    db.insert(elecTable).values(powers.map((item) => ({
-      timestamp,
-      roomId: item.roomId,
-      power: item.power,
-    }))),
-  );
+    const roomids = JSON.parse(env.roomids) as number[];
 
-  const notice = powers.filter((item) => item.power < 3);
-  const noticeMap = keyBy(notice, (i) => i.roomId);
-  const subscribes = await db.query.subscribeTable.findMany({
-    where: {
-      RAW: (table, { inArray }) =>
-        inArray(table.roomId, notice.map((i) => i.roomId)),
-    },
-    with: {
-      webpush: true,
-    },
-    columns: {
-      user: false,
-    },
-  });
-
-  for (const s of subscribes) {
-    waitUntil(
-      appServer
-        .subscribe({
-          endpoint: s.webpush!.endpoint,
-          keys: {
-            auth: s.webpush!.keysAuth,
-            p256dh: s.webpush!.keysP256dh,
-          },
-        })
-        .pushTextMessage(
-          JSON.stringify({
-            title: `${s.roomId} 剩余电量：${noticeMap[s.roomId]!.power}`,
-          }),
-          {},
-        ),
+    const powers = await Promise.all(
+      roomids.map(async (id) => ({
+        roomId: id,
+        power: await step.do(`get elec: ${id}`, async () => {
+          const resp = await fetch(
+            `https://yktyd.ecust.edu.cn/epay/wxpage/wanxiao/eleresult?sysid=1&roomid=${id}&areaid=3&buildid=20`,
+            {
+              headers: {
+                "User-Agent":
+                  "Mozilla/5.0 (Linux; U; Android 4.1.2; zh-cn; Chitanda/Akari) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30 MicroMessenger/6.0.0.58_r884092.501 NetType/WIFI",
+              },
+            },
+          );
+          const rawHtml = await resp.text();
+          const match = /(-?\d+(\.\d+)?)度/.exec(rawHtml);
+          if (!match) {
+            throw rawHtml;
+          }
+          return parseFloat(match.at(1)!);
+        }),
+      })),
     );
-  }
-};
 
-export { scheduled };
+    await step.do("insert powers", async () => {
+      await db.insert(elecTable).values(powers.map((item) => ({
+        timestamp,
+        roomId: item.roomId,
+        power: item.power,
+      })));
+    });
+
+    const notice = powers.filter((item) => item.power < 3);
+    const noticeMap = keyBy(notice, (i) => i.roomId);
+
+    const subscribes = await step.do("query subscribes", async () => {
+      return await db.query.subscribeTable.findMany({
+        where: {
+          RAW: (table, { inArray }) =>
+            inArray(table.roomId, notice.map((i) => i.roomId)),
+        },
+        with: {
+          webpush: true,
+        },
+        columns: {
+          user: false,
+        },
+      });
+    });
+
+    for (const s of subscribes) {
+      await step.do(`push notice: ${s.roomId}`, async () => {
+        await appServer
+          .subscribe({
+            endpoint: s.webpush!.endpoint,
+            keys: {
+              auth: s.webpush!.keysAuth,
+              p256dh: s.webpush!.keysP256dh,
+            },
+          })
+          .pushTextMessage(
+            JSON.stringify({
+              title: `${s.roomId} 剩余电量：${noticeMap[s.roomId]!.power}`,
+            }),
+            {},
+          );
+      });
+    }
+  }
+}
