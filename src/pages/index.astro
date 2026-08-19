@@ -1,0 +1,149 @@
+---
+import Fab from "@/components/Fab.astro";
+import Layout from "@/layouts/Layout.astro";
+import { env } from "cloudflare:workers";
+
+const rooms = env.roomids;
+---
+
+<Layout>
+    <header class="navbar bg-base-100 shadow-sm">
+        <div class="flex-1">
+            <h1 class="text-xl font-bold mx-4">EMoE</h1>
+        </div>
+        <div class="flex-none">
+            <a
+                class="btn btn-link"
+                href="https://github.com/chai-mi/elec"
+                target="_blank">GitHub</a
+            >
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-2 py-12">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold mb-4">ECUST 电量监控</h1>
+        </div>
+
+        <div class="card bg-base-200">
+            <div class="card-body">
+                <div class="flex justify-between">
+                    <h2 class="card-title">电量</h2>
+                    <form id="room_id">
+                      {rooms.map((r)=><input
+                        type="checkbox"
+                        class="btn btn-soft btn-xs md:btn-sm mx-0.5 my-2"
+                        name="frameworks"
+                        value=`${r}`
+                        aria-label={r.toString()}
+                      />)}
+                    </form>
+                    <div>
+                        <select
+                            id="pastdays"
+                            class="select select-neutral w-25"
+                        >
+                            <option value="1">一天前</option>
+                            <option value="7">一周前</option>
+                            <option value="30">一个月前</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="h-100"><canvas id="chart"></canvas></div>
+            </div>
+        </div>
+    </main>
+
+    <Fab />
+</Layout>
+
+<script>
+    import type { front } from "@/api/elec.ts";
+    import Chart from "chart.js/auto";
+    import { hc } from "hono/client";
+
+    const roomIdSelect = document.getElementById("room_id")! as HTMLFormElement;
+    const pastdaysSelect = document.getElementById(
+        "pastdays",
+    ) as unknown as HTMLSelectElement;
+    const chart = document.getElementById("chart")! as HTMLCanvasElement;
+
+    const roomIdKey = "elec-room-id";
+
+    const storage_room_id = localStorage.getItem(roomIdKey)?.split(" ") ?? [];
+
+    const roomIdSelects = document.getElementsByName(
+        "frameworks",
+    ) as NodeListOf<HTMLInputElement>;
+    roomIdSelects.forEach((element) => {
+        element.checked = storage_room_id.includes(element.value);
+    });
+
+    const client = hc<front>("/api/elec");
+
+    const myChart = new Chart<"line", number[], unknown>(chart, {
+        type: "line",
+        data: { datasets: [] },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            aspectRatio: 3,
+            interaction: {
+                intersect: false,
+                mode: "index",
+            },
+            scales: {
+                x: { grid: { display: false }, ticks: { maxTicksLimit: 5 } },
+                y: { min: 0 },
+            },
+        },
+    });
+
+    const reload = async () => {
+        const room_ids = Array.from(
+            roomIdSelect.querySelectorAll("input:checked"),
+        ).map((checkbox) => checkbox.ariaLabel!);
+        localStorage.setItem(roomIdKey, room_ids.join(" "));
+
+        const result = await Promise.all(
+            room_ids.map(async (room_id) => {
+                const resp = await client[":room_id"].$get({
+                    param: { room_id: room_id },
+                    query: { pastdays: pastdaysSelect.value },
+                });
+                if (!resp.ok) {
+                    throw await resp.text();
+                }
+                return {
+                    room_id: room_id,
+                    data: await resp.json(),
+                };
+            }),
+        );
+
+        myChart.data.labels = result.at(0)?.data.map((d) =>
+            new Date(d.timestamp).toLocaleString("zh-CN", {
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+            }),
+        );
+        myChart.data.datasets = result.map((r) => ({
+            label: r.room_id,
+            data: r.data.map((d) => d.power),
+            borderWidth: 1,
+            fill: true,
+            tension: 0,
+            pointRadius: 0,
+            pointHoverRadius: 6,
+            pointHoverBorderWidth: 2,
+        }));
+
+        myChart.update();
+    };
+
+    roomIdSelect.onchange = reload;
+    pastdaysSelect.onchange = reload;
+    await reload();
+</script>

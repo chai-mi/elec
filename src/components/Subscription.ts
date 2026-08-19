@@ -1,21 +1,24 @@
+import type { subscription } from "@/api/subscription.ts";
 import { encodeBase64Url } from "@std/encoding";
 import { hc } from "hono/client";
-import type { subscription } from "../workers/index.ts";
-import { roomIdSelect, subscript } from "./element.ts";
+
+const subscript = document.getElementById(
+  "subscription",
+)! as HTMLButtonElement;
 
 const registration = await navigator.serviceWorker.register("sw.js");
 
-const client = hc<subscription>("/");
+const client = hc<subscription>("/api/subscription");
 
 async function askUserPermission() {
   const alert = document.getElementById("subscription-alert")!;
   alert.hidden = false;
-  setTimeout(() => alert.hidden = true, 5000);
+  setTimeout(() => (alert.hidden = true), 5000);
 
   const r = await Notification.requestPermission();
   if (r !== "granted") return;
 
-  const resp = await client.api.subscription.key.$get();
+  const resp = await client.key.$get();
 
   if (!resp.ok) throw await resp.text();
 
@@ -26,29 +29,30 @@ async function askUserPermission() {
   });
 
   const userKey = "elec-username";
-  const username = localStorage.getItem(userKey) ?? (() => {
-    const u = crypto.randomUUID();
-    localStorage.setItem(userKey, u);
-    return u;
-  })();
+  const username = localStorage.getItem(userKey) ??
+    (() => {
+      const u = crypto.randomUUID();
+      localStorage.setItem(userKey, u);
+      return u;
+    })();
 
-  const room_ids = Array
-    .from(roomIdSelect.querySelectorAll("input:checked"))
-    .map((checkbox) => parseInt(checkbox.ariaLabel!));
+  const room_ids = localStorage.getItem("elec-room-id")?.split(" ") ?? [];
 
-  await client.api.subscription.$post({
+  await client.index.$post({
     json: {
       subscription: {
         endpoint: pushSubscription.endpoint,
         expirationTime: pushSubscription.expirationTime,
         keys: {
           auth: encodeBase64Url(pushSubscription.getKey("auth")!),
-          p256dh: encodeBase64Url(pushSubscription.getKey("p256dh")!),
+          p256dh: encodeBase64Url(
+            pushSubscription.getKey("p256dh")!,
+          ),
         },
       },
       userinfo: {
         username: username,
-        room_ids: room_ids,
+        room_ids: room_ids.map((i) => parseInt(i)),
       },
     },
   });

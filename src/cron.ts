@@ -1,9 +1,9 @@
+import { db } from "@/db/db.ts";
+import { elecTable } from "@/db/schema.ts";
+import { appServer } from "@/utils/webpush.ts";
 import type { WorkflowEvent } from "cloudflare:workers";
 import { env, WorkflowEntrypoint, WorkflowStep } from "cloudflare:workers";
 import { keyBy } from "es-toolkit";
-import { db } from "./db/db.ts";
-import { elecTable } from "./db/schema.ts";
-import { appServer } from "./webpush.ts";
 
 type Params = never;
 
@@ -11,7 +11,7 @@ export class Elec extends WorkflowEntrypoint<Env, Params> {
   override async run(_event: WorkflowEvent<Params>, step: WorkflowStep) {
     const timestamp = performance.now();
 
-    const roomids = JSON.parse(env.roomids) as number[];
+    const roomids = env.roomids as number[];
 
     const powers = await Promise.all(
       roomids.map(async (id) => ({
