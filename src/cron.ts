@@ -1,9 +1,7 @@
 import { db } from "@/db/db.ts";
 import { elecTable } from "@/db/schema.ts";
-import { appServer } from "@/utils/webpush.ts";
 import type { WorkflowEvent } from "cloudflare:workers";
 import { env, WorkflowEntrypoint, WorkflowStep } from "cloudflare:workers";
-import { keyBy } from "es-toolkit";
 
 type Params = never;
 
@@ -43,42 +41,5 @@ export class Elec extends WorkflowEntrypoint<Env, Params> {
         power: item.power,
       })));
     });
-
-    const notice = powers.filter((item) => item.power < 3);
-    const noticeMap = keyBy(notice, (i) => i.roomId);
-
-    const subscribes = await step.do("query subscribes", async () => {
-      return await db.query.subscribeTable.findMany({
-        where: {
-          RAW: (table, { inArray }) =>
-            inArray(table.roomId, notice.map((i) => i.roomId)),
-        },
-        with: {
-          webpush: true,
-        },
-        columns: {
-          user: false,
-        },
-      });
-    });
-
-    for (const s of subscribes) {
-      await step.do(`push notice: ${s.roomId}`, async () => {
-        await appServer
-          .subscribe({
-            endpoint: s.webpush!.endpoint,
-            keys: {
-              auth: s.webpush!.keysAuth,
-              p256dh: s.webpush!.keysP256dh,
-            },
-          })
-          .pushTextMessage(
-            JSON.stringify({
-              title: `${s.roomId} 剩余电量：${noticeMap[s.roomId]!.power}`,
-            }),
-            {},
-          );
-      });
-    }
   }
 }

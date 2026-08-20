@@ -1,5 +1,4 @@
 import { front } from "@/api/elec.ts";
-import { subscription } from "@/api/subscription.ts";
 import type { APIRoute } from "astro";
 import { env } from "cloudflare:workers";
 import { Hono } from "hono";
@@ -12,7 +11,6 @@ app.use(cache({
   cacheControl: "public,max-age=3600",
 }));
 
-app.route("/subscription", subscription);
 app.route("/elec", front);
 
 export const ALL: APIRoute = (c) =>
